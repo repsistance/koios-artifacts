@@ -60,14 +60,18 @@ begin
       epoch;
     -- no-op if we already have data up until second most recent epoch
     if _latest_epoch_no_in_cache >= (_curr_epoch - 1) then
+      RAISE NOTICE 'no-op if we already have data up until second most recent epoch';
       return;
     end if;
     -- if current epoch is at least 2 ahead of latest in cache, repopulate from latest in cache until current-1
+    RAISE NOTICE 'if current epoch is at least 2 ahead of latest in cache, repopulate from latest in cache until current-1';
     _epoch_no_to_insert_from := _latest_epoch_no_in_cache;
   end if;
   -- purge the data for the given epoch range, in theory should do nothing if invoked only at start of new epoch
+  RAISE NOTICE 'purge the data for the given epoch range, in theory should do nothing if invoked only at start of new epoch';
   delete from grest.pool_history_cache
   where epoch_no >= _epoch_no_to_insert_from;
+  RAISE NOTICE 'actual insert';
   insert into grest.pool_history_cache ( with blockcounts as (
       select
         sl.pool_hash_id,
